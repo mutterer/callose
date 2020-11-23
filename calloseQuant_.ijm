@@ -2,17 +2,17 @@
 // Huang et al., 2020.
 
 Dialog.create("Analysis of PD-associated callose");
-	Dialog.addChoice("Analysis to perform", newArray("Huang et al., 2020","Zavaliev et al., 2015"));
+	Dialog.addChoice("Analysis to perform", newArray("Method A","Method B"));
 	Dialog.addChoice("Source Data", newArray("Active Single Image","Active Image Stack","Folder of Images"));
 	Dialog.addDirectory("Data Folder","");
 	
-	Dialog.addMessage("Huang Parameters", 10);
+	Dialog.addMessage("Method A Parameters", 10);
 	Dialog.addNumber("Peak prominence", 100);
 	Dialog.addNumber("Measurement radius", 4);
 	// peak promionence was discussed here: https://forum.image.sc/t/new-maxima-finder-menu-in-fiji/25504/5
 	
 	Dialog.addMessage("-or-", 10);
-	Dialog.addMessage("Zavaliev Parameters", 10);
+	Dialog.addMessage("Method B Parameters", 10);
 	Dialog.addNumber("Rolling ball radius", 30);
 	Dialog.addNumber("Mean filter radius", 3);
 	Dialog.addNumber("Auto Local Threshold radius", 10);
@@ -57,12 +57,12 @@ if (data=="Active Single Image") {
 exit();
 
 function applyMethod() {
-	if (method=="Huang et al., 2020") doHuang(); 
-	else doZavaliev();
+	if (method=="Method A") doMethodA(); 
+	else doMethodB();
 }
 
-function doHuang() {
-	print ("Applying Huang method on "+getTitle+" slice # "+getSliceNumber());
+function doMethodA() {
+	print ("Applying Method A on "+getTitle+" slice # "+getSliceNumber());
 	run("Grays");
 	run("Select None");
 	run("Find Maxima...", "prominence="+prominence+" output=[Point Selection]");
@@ -73,8 +73,8 @@ function doHuang() {
 	}
 }
 
-function doZavaliev() {
-	print ("Applying Zavaliev method on "+getTitle+" slice # "+getSliceNumber());
+function doMethodB() {
+	print ("Applying Method B on "+getTitle+" slice # "+getSliceNumber());
 	run("Subtract Background...", "rolling="+rollingRadius); 
 	original_file_name = File.name;
 	duplicated_file_name = File.nameWithoutExtension + "-1";
