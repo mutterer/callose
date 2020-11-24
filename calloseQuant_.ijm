@@ -39,11 +39,13 @@ if (data=="Active Single Image") {
 	applyMethod();
 }  else if (data=="Active Image Stack") { 
 	idStack = getImageID;
-	for (i=1;i<=nSlices; i++) {
+	n=nSlices;
+	for (i=1;i<=n; i++) {
+		setSlice(i);
 		selectImage(idStack);
-		run("Duplicate...","title=Slice_"+i+"_"+getTitle());
+		run("Duplicate...","title=[Slice_"+i+"_"+getTitle()+"]");
 		applyMethod();
-		close();
+		selectImage(idStack);
 	}
 }  else if (data=="Folder of Images") { 
 	list = getFileList(folder);
@@ -62,7 +64,7 @@ function applyMethod() {
 }
 
 function doMethodA() {
-	print ("Applying Method A on "+getTitle+" slice # "+getSliceNumber());
+	print ("Applying Method A on "+getTitle);
 	run("Grays");
 	run("Select None");
 	run("Find Maxima...", "prominence="+prominence+" output=[Point Selection]");
@@ -71,17 +73,22 @@ function doMethodA() {
 		makeOval(x[i]-mRadius,y[i]-mRadius,mRadius*2,mRadius*2);
 		run("Measure");
 	}
+	close(); // closes duplicated slice image
 }
 
 function doMethodB() {
-	print ("Applying Method B on "+getTitle+" slice # "+getSliceNumber());
+	print ("Applying Method B on "+getTitle);
 	run("Subtract Background...", "rolling="+rollingRadius); 
-	original_file_name = File.name;
-	duplicated_file_name = File.nameWithoutExtension + "-1";
-	run("Duplicate...", "title=&duplicated_file_name");
+	original_file_name = getTitle;
+	duplicated_file_name = "Copy_of_"+original_file_name;
+	run("Duplicate...", "title=[&duplicated_file_name]");
 	run("Mean...", "radius="+mRadius);
+	if (bitDepth>8) run ("8-bit");
 	run("Auto Local Threshold...", "method=Bernsen radius="+localRadius+" parameter_1=0 parameter_2=0 white");
 	setOption("BlackBackground", false);
 	run("Set Measurements...", "area mean min integrated display redirect=[&original_file_name] decimal = 2");
-	run("Analyze Particles...", "size="+sizeFilter+" circularity="+circFilter+" show=[Bare Outlines] display exclude");
+	run("Analyze Particles...", "size="+sizeFilter+" circularity="+circFilter+" show=[Bare Outlines] display exclude");	
+	close(); // closes particles outlines image
+	close(); // closes binary mask image
+	close(); // closes duplicated slice image
 }
