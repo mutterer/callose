@@ -65,6 +65,7 @@ function applyMethod() {
 
 function doMethodA() {
 	print ("Applying Method A on "+getTitle);
+	roiManager('reset');
 	run("Grays");
 	run("Select None");
 	run("Find Maxima...", "prominence="+prominence+" output=[Point Selection]");
@@ -72,7 +73,9 @@ function doMethodA() {
 	for (i=0;i<x.length;i++) {
 		makeOval(x[i]-mRadius,y[i]-mRadius,mRadius*2,mRadius*2);
 		run("Measure");
+		roiManager('add');
 	}
+	roiManager("Show All with labels");
 	if (!(data.startsWith("Active Single Image"))) close(); // closes duplicated slice image
 }
 
