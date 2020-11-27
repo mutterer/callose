@@ -73,7 +73,7 @@ function doMethodA() {
 		makeOval(x[i]-mRadius,y[i]-mRadius,mRadius*2,mRadius*2);
 		run("Measure");
 	}
-	close(); // closes duplicated slice image
+	if (!(data.startsWith("Active Single Image"))) close(); // closes duplicated slice image
 }
 
 function doMethodB() {
