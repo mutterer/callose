@@ -90,7 +90,7 @@ function doMethodB() {
 	run("Auto Local Threshold...", "method=Bernsen radius="+localRadius+" parameter_1=0 parameter_2=0 white");
 	setOption("BlackBackground", false);
 	run("Set Measurements...", "area mean min integrated display redirect=[&original_file_name] decimal = 2");
-	run("Analyze Particles...", "size="+sizeFilter+" circularity="+circFilter+" show=[Bare Outlines] display exclude");	
+	run("Analyze Particles...", "size="+sizeFilter+" pixel circularity="+circFilter+" show=[Bare Outlines] display exclude");	
 	close(); // closes particles outlines image
 	close(); // closes binary mask image
 	close(); // closes duplicated slice image
