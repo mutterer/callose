@@ -13,10 +13,10 @@ Dialog.create("Analysis of PD-associated callose");
 	
 	Dialog.addMessage("-or-", 10);
 	Dialog.addMessage("Method B Parameters", 10);
-	Dialog.addNumber("Rolling ball radius", 30);
-	Dialog.addNumber("Mean filter radius", 3);
-	Dialog.addNumber("Auto Local Threshold radius", 10);
-	Dialog.addString("Analyze Particles size filter", "3-100");
+	Dialog.addNumber("Rolling ball radius", 8);
+	Dialog.addNumber("Mean filter radius", 2);
+	Dialog.addNumber("Auto Local Threshold radius", 180);
+	Dialog.addString("Analyze Particles size filter", "25-240");
 	Dialog.addString("Analyze Particles circularity filter", "0.5-1");
 Dialog.show();
 
@@ -90,8 +90,13 @@ function doMethodB() {
 	run("Auto Local Threshold...", "method=Bernsen radius="+localRadius+" parameter_1=0 parameter_2=0 white");
 	setOption("BlackBackground", false);
 	run("Set Measurements...", "area mean min integrated display redirect=[&original_file_name] decimal = 2");
-	run("Analyze Particles...", "size="+sizeFilter+" pixel circularity="+circFilter+" show=[Bare Outlines] display exclude");	
+	addToManager ="";
+	if ((data.startsWith("Active Single Image"))) addToManager ="add";
+	run("Analyze Particles...", "size="+sizeFilter+" pixel circularity="+circFilter+" show=[Bare Outlines] display exclude "+addToManager);	
 	close(); // closes particles outlines image
 	close(); // closes binary mask image
+	roiManager("Show All with labels");
+	if (!(data.startsWith("Active Single Image"))) {
 	close(); // closes duplicated slice image
+	}
 }
